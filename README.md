@@ -9,7 +9,7 @@ Typer
   * [Bootstrap](#bootstrap)
 
 
-<a name=library_used'></a>
+<a name='library_used'></a>
 ## Library Used
 
 <a name='jquery'></a>
