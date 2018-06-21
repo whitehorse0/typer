@@ -46,8 +46,8 @@ Typer
 
 
 ## Notes
-### Running normal in all browser, Google Chrome 67.0.3396.87, Mozilla Firefox 60.0.2, IE 11 Running.
-### Using css transition for better animation.
+* Running normal in all browser, Google Chrome 67.0.3396.87, Mozilla Firefox 60.0.2, IE 11 Running.
+* Using css transition for better animation.
 
 ### ToDo
 
