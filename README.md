@@ -45,15 +45,14 @@ Typer
 [website-bootstrap]: http://getbootstrap.com/
 
 
-### Notes
-
-<a name="browsers">
-* Running normal in all browser, Google Chrome 67.0.3396.87, Mozilla Firefox 60.0.2, IE 11 Running.
+## Notes
+### Running normal in all browser, Google Chrome 67.0.3396.87, Mozilla Firefox 60.0.2, IE 11 Running.
+### Using css transition for better animation.
 
 ### ToDo
 
 - [x] What libraries are used, the library's website is where, and the documentation library is there where.
-- [ ] How to make animations more 'smooth'.
+- [x] How to make animations more 'smooth'.
 - [x] The app runs on 3 popular browsers.
 - [x] Implement Start button, Stop, Pause, and Resume.
 - [x] Responsive based on changing screen size.

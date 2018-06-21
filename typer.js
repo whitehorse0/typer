@@ -56,8 +56,8 @@ var WordView = Backbone.View.extend({
 var TyperView = Backbone.View.extend({
 	initialize: function() {
 		var container = $('#container');
-		var wrapper = $('<div>');
-		// container.append(wrapper);
+		var wrapper = $('<div id="wrapper">');
+		
 		this.wrapper = wrapper;
 		
 		var self = this;
@@ -97,7 +97,7 @@ var TyperView = Backbone.View.extend({
 					.submit(function() {
 						return false;
 					})
-					.append(text_input)));
+					.append(text_input))).css({'transition': 'all 1s ease-out'});
 		
 		text_input.css({left:((wrapper.width() - text_input.width()) / 2) + 'px'});
 		text_input.focus();
@@ -152,7 +152,7 @@ var Typer = Backbone.Model.extend({
 		
 		if (state !== 'start') {
 			clearInterval(startInterval);
-			$('#animation div').remove();
+			$('#wrapper div').remove();
 			startInterval = false;
 			state = 'start'	
 		}
@@ -168,7 +168,7 @@ var Typer = Backbone.Model.extend({
 
 	stop: function() {
 		clearInterval(startInterval);
-		$('#animation div').remove();
+		$('#wrapper div').remove();
 		startInterval = false;
 		state = 'start'
 	},
