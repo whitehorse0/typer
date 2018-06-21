@@ -52,6 +52,6 @@ Typer
 - [ ] How to make animations more 'smooth'.
 - [x] The app runs on 3 popular browsers.
 - [x] Implement Start button, Stop, Pause, and Resume.
-- [ ] Responsive based on changing screen size.
+- [x] Responsive based on changing screen size.
 - [ ] Implement score system.
 - [ ] Implement the punishment in the form of a reduction in value when it is typed.

@@ -55,7 +55,9 @@ var WordView = Backbone.View.extend({
 
 var TyperView = Backbone.View.extend({
 	initialize: function() {
-		var wrapper = $('#animation');
+		var container = $('#container');
+		var wrapper = $('<div>');
+		// container.append(wrapper);
 		this.wrapper = wrapper;
 		
 		var self = this;
@@ -86,7 +88,7 @@ var TyperView = Backbone.View.extend({
 				}
 			});
 		
-		$(this.el)
+		container
 			.append(wrapper
 				.append($('<form>')
 					.attr({
@@ -147,7 +149,7 @@ var Typer = Backbone.Model.extend({
 	start: function() {
 		var animation_delay = 100;
 		var self = this;
-		console.log(state)
+		
 		if (state !== 'start') {
 			clearInterval(startInterval);
 			$('#animation div').remove();
