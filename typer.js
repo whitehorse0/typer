@@ -55,14 +55,9 @@ var WordView = Backbone.View.extend({
 
 var TyperView = Backbone.View.extend({
 	initialize: function() {
-		var wrapper = $('<div>')
-			.css({
-				position:'fixed',
-				top:'0',
-				left:'0',
-				width:'100%',
-				height:'100%'
-			});
+		var container = $('#container');
+		var wrapper = $('<div id="wrapper">');
+		
 		this.wrapper = wrapper;
 		
 		var self = this;
@@ -93,7 +88,7 @@ var TyperView = Backbone.View.extend({
 				}
 			});
 		
-		$(this.el)
+		container
 			.append(wrapper
 				.append($('<form>')
 					.attr({
@@ -102,7 +97,7 @@ var TyperView = Backbone.View.extend({
 					.submit(function() {
 						return false;
 					})
-					.append(text_input)));
+					.append(text_input))).css({'transition': 'all 1s ease-out'});
 		
 		text_input.css({left:((wrapper.width() - text_input.width()) / 2) + 'px'});
 		text_input.focus();
@@ -132,11 +127,14 @@ var TyperView = Backbone.View.extend({
 	}
 });
 
+var startInterval;
+var state = 'start';
+
 var Typer = Backbone.Model.extend({
 	defaults:{
 		max_num_words:10,
 		min_distance_between_words:50,
-		words:new Words(),
+		words: new Words(),
 		min_speed:1,
 		max_speed:5,
 	},
@@ -151,13 +149,48 @@ var Typer = Backbone.Model.extend({
 	start: function() {
 		var animation_delay = 100;
 		var self = this;
-		setInterval(function() {
-			self.iterate();
-		},animation_delay);
+		
+		if (state !== 'start') {
+			clearInterval(startInterval);
+			$('#wrapper div').remove();
+			startInterval = false;
+			state = 'start'	
+		}
+
+		if (state === 'start' && !startInterval) {
+			startInterval = setInterval(function() {
+				self.iterate();
+			},animation_delay);
+
+			state = 'pause';
+		}
+	},
+
+	stop: function() {
+		clearInterval(startInterval);
+		$('#wrapper div').remove();
+		startInterval = false;
+		state = 'start'
+	},
+
+	pause: function() {
+		if (state === 'pause') {
+			clearInterval(startInterval);
+			startInterval = false;
+			state = 'resume'
+		}
+	},
+
+	resume: function() {
+		if (state === 'resume') {
+			state = 'start'
+			startInterval = false;
+			this.start()
+		}
 	},
 	
 	iterate: function() {
-		var words = this.get('words');
+		words = this.get('words');
 		if(words.length < this.get('max_num_words')) {
 			var top_most_word = undefined;
 			for(var i = 0;i < words.length;i++) {
