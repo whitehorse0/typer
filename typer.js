@@ -4,6 +4,29 @@ var Word = Backbone.Model.extend({
 	}
 });
 
+var Score = Backbone.Model.extend({
+    defaults: {
+        point: 0,
+        pointPlus: 10,
+        pointMinus: 5
+    },
+    increment: function() {
+        this.set({
+            point: this.get('point') + this.get('pointPlus')
+        });
+    },
+    decrement: function() {
+        this.set({
+            point: this.get('point') - this.get('pointMinus')
+        });
+    },
+    reset: function() {
+        this.set({
+            point: 0
+        });
+    }
+});
+
 var Words = Backbone.Collection.extend({
 	model:Word
 });
@@ -56,7 +79,7 @@ var WordView = Backbone.View.extend({
 var TyperView = Backbone.View.extend({
 	initialize: function() {
 		var container = $('#container');
-		var wrapper = $('<div id="wrapper">');
+		var wrapper = $('<div>').attr({id: 'wrapper'});
 		
 		this.wrapper = wrapper;
 		
@@ -72,12 +95,14 @@ var TyperView = Backbone.View.extend({
 				'margin-bottom':'10px',
 				'z-index':'1000'
 			}).keyup(function() {
+				var minus = true;
 				var words = self.model.get('words');
 				for(var i = 0;i < words.length;i++) {
 					var word = words.at(i);
 					var typed_string = $(this).val();
 					var string = word.get('string');
 					if(string.toLowerCase().indexOf(typed_string.toLowerCase()) == 0) {
+						minus = false;
 						word.set({highlight:typed_string.length});
 						if(typed_string.length == string.length) {
 							$(this).val('');
@@ -86,6 +111,10 @@ var TyperView = Backbone.View.extend({
 						word.set({highlight:0});
 					}
 				}
+
+				if (minus) {
+	                self.model.get('score').decrement();
+	            }
 			});
 		
 		container
@@ -127,6 +156,34 @@ var TyperView = Backbone.View.extend({
 	}
 });
 
+var ScoreView = Backbone.View.extend({
+    initialize: function() {
+        var scoreWrapper = $('<h4>')
+                .attr({
+                    id: 'scoreWrapper'
+                })
+                .css({
+                    float: 'right'
+                }).
+                text('Score : ');
+
+        var score = $('<span>')
+                .addClass('badge')
+                .css({
+                    'border-radius': '4px',
+                    'z-index': '1000'
+                }).text(this.model.get('score').get('point'));
+
+        $('#wrapper').append(scoreWrapper.append(score));
+
+        this.listenTo(this.model.get('score'), "change", this.render);
+        this.render();
+    },
+    render: function() {
+        $('span.badge').html(this.model.get('score').get('point'));
+    }
+});
+
 var startInterval;
 var state = 'start';
 
@@ -135,6 +192,7 @@ var Typer = Backbone.Model.extend({
 		max_num_words:10,
 		min_distance_between_words:50,
 		words: new Words(),
+		score: new Score(),
 		min_speed:1,
 		max_speed:5,
 	},
@@ -144,6 +202,11 @@ var Typer = Backbone.Model.extend({
 			model: this,
 			el: $(document.body)
 		});
+
+		new ScoreView({
+            model: this,
+            el: $(document.body)
+        });
 	},
 
 	start: function() {
@@ -164,6 +227,9 @@ var Typer = Backbone.Model.extend({
 
 			state = 'pause';
 		}
+
+		var score = this.get('score');
+        score.reset();
 	},
 
 	stop: function() {
@@ -226,6 +292,10 @@ var Typer = Backbone.Model.extend({
 		for(var i = 0;i < words.length;i++) {
 			var word = words.at(i);
 			word.move();
+
+			if (word.get('move_next_iteration')) {
+                this.get('score').increment();
+            }
 			
 			if(word.get('y') > $(window).height() || word.get('move_next_iteration')) {
 				words_to_be_removed.push(word);
