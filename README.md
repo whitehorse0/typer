@@ -56,5 +56,5 @@ Typer
 - [x] The app runs on 3 popular browsers.
 - [x] Implement Start button, Stop, Pause, and Resume.
 - [x] Responsive based on changing screen size.
-- [ ] Implement score system.
-- [ ] Implement the punishment in the form of a reduction in value when it is typed.
+- [x] Implement score system.
+- [x] Implement the punishment in the form of a reduction in value when it is typed.
